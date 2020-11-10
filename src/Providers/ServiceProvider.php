@@ -15,7 +15,19 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom($this->getConfig(), 'phone-number-verification');
+        $this->mergeConfigFrom($this->getConfig(), 'phone_number_verification');
+
+        $this->publishes([$this->getConfig() => config_path('phone_number_verification.php')], 'config');
+
+        $this->publishes([
+            __DIR__.'/../../resources/lang' => resource_path('lang/phone-number-verification'),
+        ], 'lang');
+
+        $this->publishes([
+            __DIR__.'/../../resources/views' => resource_path('views/phone-number-verification'),
+        ], 'views');
+
+        $this->publishes([__DIR__.'/../../database/migrations' => database_path('migrations')], 'migrations');
     }
 
     /**
@@ -27,7 +39,7 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../Http/Routes/web.php');
-        $this->loadViewsFrom(__DIR__.'/../../resources/views/', 'phone-number-verification');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views/', 'phone_number_verification');
 
         $router->aliasMiddleware('verified_phone_number', EnsurePhoneNumberIsVerified::class);
     }

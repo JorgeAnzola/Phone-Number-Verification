@@ -5,6 +5,10 @@ namespace JorgeAnzola\PhoneNumberVerification\Traits;
 trait MustVerifyPhoneNumber
 {
 
+    public function __construct()
+    {
+    }
+
     /**
      * Determine if the user has verified their phone_number address.
      *
@@ -12,7 +16,9 @@ trait MustVerifyPhoneNumber
      */
     public function hasVerifiedPhoneNumber()
     {
-        return !is_null($this->phone_number_verified_at);
+        $phoneNumberVerifiedAtColumn = config('phone_number_verification.phone_number_column', 'phone_number_verified_at');
+
+        return !is_null($this->$phoneNumberVerifiedAtColumn);
     }
 
     /**
@@ -22,8 +28,10 @@ trait MustVerifyPhoneNumber
      */
     public function markPhoneNumberAsVerified()
     {
+        $phoneNumberVerifiedAtColumn = config('phone_number_verification.phone_number_column', 'phone_number_verified_at');
+
         return $this->forceFill([
-            'phone_number_verified_at' => $this->freshTimestamp(),
+            $phoneNumberVerifiedAtColumn => $this->freshTimestamp(),
         ])->save();
     }
 
@@ -34,7 +42,7 @@ trait MustVerifyPhoneNumber
      */
     public function sendPhoneNumberVerificationNotification(): void
     {
-        $verificationProvider = config('phone-number-verification.verification_provider', '\JorgeAnzola\PhoneNumberVerification\Providers\VerificationProvider');
+        $verificationProvider = config('phone_number_verification.verification_provider', '\JorgeAnzola\PhoneNumberVerification\Providers\TwilioVerificationProvider');
 
         (new $verificationProvider())->sendVerificationToken($this->getPhoneNumberForVerification());
     }
@@ -46,6 +54,8 @@ trait MustVerifyPhoneNumber
      */
     public function getPhoneNumberForVerification(): string
     {
-        return $this->phone_number;
+        $phoneNumberColumn = config('phone_number_verification.phone_number_column', 'phone_number');
+
+        return $this->$phoneNumberColumn;
     }
 }

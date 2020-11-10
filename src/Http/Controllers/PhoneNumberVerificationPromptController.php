@@ -8,19 +8,26 @@ use JorgeAnzola\PhoneNumberVerification\Http\Requests\PhoneNumberVerification;
 
 class PhoneNumberVerificationPromptController
 {
-    public function __invoke(Request $request)
+    public function show(Request $request)
     {
-        return $request->user()->hasVerifiedPhoneNumber() ? redirect()->intended(config('phone-number-verification.home',
-            'dashboard')) : view(config('phone-number-verification.verify-phone-number-view', 'phone-number-verification::verify-phone-number'));
+        return $request->user()->hasVerifiedPhoneNumber() ? redirect()->intended(config('phone_number_verification.home',
+            'dashboard')) : view(config('phone_number_verification.verify_phone_number_view', 'phone_number_verification::verify-phone-number'));
     }
 
     public function verify(PhoneNumberVerification $request)
     {
-        $verificationProvider = config('phone-number-verification.verification_provider', '\JorgeAnzola\PhoneNumberVerification\Providers\VerificationProvider');
+        $verificationProvider = config('phone_number_verification.verification_provider', '\JorgeAnzola\PhoneNumberVerification\Providers\TwilioVerificationProvider');
 
-        (new $verificationProvider())->verifyToken($request->user(), $request->verification_token);
+        $verificationProviderInstance = (new $verificationProvider());
 
-        return $request->wantsJson() ? new JsonResponse([]) : back()->with('verification_token_sent', true);
+        $verificationResult = $verificationProviderInstance->verifyToken($request->user(), $request->verification_token);
+
+        if ($verificationResult) {
+
+            $verificationProviderInstance->markPhoneNumberAsVerified($request->user());
+
+            return $request->wantsJson() ? new JsonResponse([]) : back()->with('verification_token_sent', true);
+        }
     }
 
     public function resend(Request $request)
