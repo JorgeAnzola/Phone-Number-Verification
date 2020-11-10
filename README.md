@@ -75,31 +75,34 @@ php artisan vendor:publish --provider="JorgeAnzola\PhoneNumberVerification\Provi
 Configurable parameters
 
 ```php
+<?php
+return [
     'from' => env('APP_NAME'),
-
+    
     'verification_provider' => '\JorgeAnzola\PhoneNumberVerification\Providers\TwilioVerificationProvider',
-
+    
     'twilio_auth_token' => env('TWILIO_AUTH_TOKEN', null),
-
+    
     'twilio_account_sid' => env('TWILIO_ACCOUNT_SID', null),
-
+    
     'twilio_verify_sid' => env('TWILIO_VERIFY_SID', null),
-
+    
     'views' => true,
-
+    
     'verify_phone_number_view' => 'phone_number_verification::verify-phone-number',
-
+    
     'middleware' => ['web', 'auth'],
-
+    
     'verify_token_middleware' => ['throttle:10:1'],
-
+    
     'resend_token_middleware' => ['throttle:5:1'],
-
+    
     'users_table' => 'users',
-
+    
     'phone_number_column' => 'phone_number',
-
+    
     'phone_number_verified_at_column' => 'phone_number_verified_at',
+];
 
 ```
 
