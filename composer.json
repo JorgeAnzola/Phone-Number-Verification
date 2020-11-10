@@ -1,0 +1,42 @@
+{
+    "name": "jorgeanzola/phone-number-verification",
+    "description": "Phone Number Verification is a package that allows the user to verify their mobile number",
+    "keywords": [
+        "laravel",
+        "lumen",
+        "phone-number",
+        "phone-number-verification",
+        "mobile",
+        "mobile-verification"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jorge Anzola",
+            "email": "jorgeanzola@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "laravel/framework": "^8.12",
+        "laravel/jetstream": "^1.6",
+        "twilio/sdk": "^6.12"
+    },
+    "config": {
+        "discard-changes": true
+    },
+    "autoload": {
+        "psr-4": {
+            "JorgeAnzola\\PhoneNumberVerification\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JorgeAnzola\\PhoneNumberVerification\\Providers\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
