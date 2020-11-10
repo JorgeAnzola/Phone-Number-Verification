@@ -13,15 +13,21 @@ class AddFieldsToUsers extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('users', 'phone_number')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->string('phone_number')->unique()->nullable();
+        $usersTable = config('phone_number_verification.users_table');
+
+        $phoneNumberColumn = config('phone_number_verification.phone_number_column');
+
+        if (!Schema::hasColumn($usersTable, $phoneNumberColumn)) {
+            Schema::table($usersTable, function (Blueprint $table) use ($phoneNumberColumn) {
+                $table->string($phoneNumberColumn)->unique()->nullable();
             });
         }
 
-        if (!Schema::hasColumn('users', 'phone_number_verified_at')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->timestamp('phone_number_verified_at')->nullable()->after('phone_number');
+        $phoneNumberVerifiedAtColumn = config('phone_number_verification.phone_number_verified_at_column');
+
+        if (!Schema::hasColumn($usersTable, $phoneNumberVerifiedAtColumn)) {
+            Schema::table($usersTable, function (Blueprint $table) use ($phoneNumberVerifiedAtColumn, $phoneNumberColumn) {
+                $table->timestamp($phoneNumberVerifiedAtColumn)->nullable()->after($phoneNumberColumn);
             });
         }
     }
@@ -33,15 +39,21 @@ class AddFieldsToUsers extends Migration
      */
     public function down()
     {
-        if (!Schema::hasColumn('users', 'phone_number')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->dropColumn('phone_number');
+        $usersTable = config('phone_number_verification.users_table');
+
+        $phoneNumberColumn = config('phone_number_verification.phone_number_column');
+
+        if (!Schema::hasColumn($usersTable, $phoneNumberColumn)) {
+            Schema::table($usersTable, function (Blueprint $table) use ($phoneNumberColumn) {
+                $table->dropColumn($phoneNumberColumn);
             });
         }
 
-        if (!Schema::hasColumn('users', 'phone_number_verified_at')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->dropColumn('phone_number_verified_at');
+        $phoneNumberVerifiedAtColumn = config('phone_number_verification.phone_number_verified_at_column');
+
+        if (!Schema::hasColumn($usersTable, $phoneNumberVerifiedAtColumn)) {
+            Schema::table($usersTable, function (Blueprint $table) use ($phoneNumberVerifiedAtColumn) {
+                $table->dropColumn($phoneNumberVerifiedAtColumn);
             });
         }
     }
