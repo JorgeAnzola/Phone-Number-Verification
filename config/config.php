@@ -15,6 +15,20 @@ return [
     */
 
     'from' => env('APP_NAME'),
+    
+    // TODO
+    /*
+    |--------------------------------------------------------------------------
+    | Force verification for users with no number
+    |--------------------------------------------------------------------------
+    |
+    | Determines if the verification middleware should run even if the user
+    | has no phone number in the database. Set it to true if asking for
+    | the phone number is part of your registration process.
+    |
+    */
+
+    'force_verification_for_empty_numbers' => false,
 
     /*
     |--------------------------------------------------------------------------
